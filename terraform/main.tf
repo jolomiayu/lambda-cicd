@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "artifact_bucket" {
 
 # Lambda Function
 resource "aws_lambda_function" "my_lambda" {
-  function_name = "terraformLambda"
+  function_name = "terraformLambdaV2"
 
   role = "arn:aws:iam::825765402564:role/service-role/cicdLambda-role-ahyzqgmj"
 
