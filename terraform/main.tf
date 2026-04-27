@@ -2,8 +2,15 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"   # lighter version (fixes your space issue)
+      version = "~> 4.0"
     }
+  }
+
+  backend "s3" {
+    bucket         = "terraform-state-jolomi"
+    key            = "global/terraform.tfstate"
+    region         = "eu-west-1"
+    dynamodb_table = "terraform-locks"
   }
 }
 
@@ -11,14 +18,19 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-# S3 Bucket
-resource "aws_s3_bucket" "artifact_bucket" {
-  bucket = "lambda-artifacts-jolomi-tf-001"
+# Environment variable
+variable "env" {
+  default = "dev"
 }
 
-# Lambda Function
+# S3 bucket for artifacts
+resource "aws_s3_bucket" "artifact_bucket" {
+  bucket = "lambda-artifacts-jolomi-${var.env}"
+}
+
+# Lambda function
 resource "aws_lambda_function" "my_lambda" {
-  function_name = "terraformLambdaV2"
+  function_name = "terraformLambda-${var.env}"
 
   role = "arn:aws:iam::825765402564:role/service-role/cicdLambda-role-ahyzqgmj"
 
