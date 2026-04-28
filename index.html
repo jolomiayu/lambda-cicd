@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Karrie Beauty Hub</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e63950;
+    }
+
+    #response {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Karrie Beauty Hub 💇🏽‍♀️</h2>
+
+  <form id="bookingForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+
+    <select id="service">
+      <option value="">Select Service</option>
+      <option value="Braiding">Braiding</option>
+      <option value="Frontal Installation">Frontal Installation</option>
+      <option value="Facial">Facial</option>
+      <option value="Pedicure">Pedicure</option>
+    </select>
+
+    <input type="date" id="date" required>
+
+    <button type="submit">Book Appointment</button>
+  </form>
+
+  <p id="response"></p>
+</div>
+
+<script>
+document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const data = {
+    name: document.getElementById("name").value,
+    service: document.getElementById("service").value,
+    date: document.getElementById("date").value
+  };
+
+  try {
+    const res = await fetch("https://5vk6kp6mj5.execute-api.eu-west-1.amazonaws.com/book", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    document.getElementById("response").innerText = "✅ Booking successful!";
+    
+    document.getElementById("bookingForm").reset();
+
+  } catch (error) {
+    console.error(error);
+    document.getElementById("response").innerText = "❌ Error booking. Try again.";
+  }
+});
+</script>
+
+</body>
+</html>
